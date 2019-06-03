@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zxt.shengxian.dao.ShoppingDao">
+    <insert id="addShopping">
+        insert into shopping(uId,pId,pCount,sDateTime)
+        value(#{uId},#{pId},#{pCount},NOW())
+    </insert>
+    <select id="getShoppingListByUId" resultMap="ShoppingMap">
+        select * from shopping as s
+        inner join product as p on s.pId = p.pId
+        where uId = 1
+    </select>
+    <resultMap id="ShoppingMap" type="Shopping" autoMapping="true">
+        <association property="product" javaType="product">
+            <id property="pId" column="pId"/>
+            <result property="pName" column="pName"/>
+            <result property="pType" column="pType"/>
+            <result property="pUnitPrice" column="pUnitPrice"/>
+            <result property="pDesc" column="pDesc"/>
+            <result property="pImage" column="pImage"/>
+            <result property="pUnit" column="pUnit"/>
+            <result property="pBigImage" column="pBigImage"/>
+            <result property="pTitle" column="pTitle"/>
+        </association>
+    </resultMap>
+    <delete id="delShopping">
+        delete from shopping where sId = #{sId}
+    </delete>
+    <update id="updPCountBySId">
+        update shopping set pCount = #{pCount} where sId = #{sId}
+    </update>
+    <select id="getShoppingByUIdAndPId" resultType="Shopping">
+        select * from shopping where uId = #{uId} and pId = #{pId}
+    </select>
+    <delete id="batchDelShopping">
+        delete from shopping where sId in
+        <foreach collection="sIds" item="value" open="(" close=")" separator=",">
+            #{value}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zxt.shengxian.dao.ProductDao">
+    <select id="getProductListByCount" resultType="Product">
+        select * from product p
+        where (select count(*) from product where pType = p.pType and pUnitPrice > p.pUnitPrice) <![CDATA[   <  ]]> #{count}
+        order by p.pType
+    </select>
+
+    <select id="getProductListByTypeCount" resultType="Integer">
+        select count(1) from product
+        where 1 = 1
+        <if test="ptId != null ">
+            and pType = #{ptId}
+        </if>
+        <if test="pName != null and pName != ''">
+            and pName = #{pName}
+    </if>
+    </select>
+    <select id="getProductListByType" resultType="Product">
+        select * from product
+        where 1 = 1
+        <if test="ptId != null ">
+        and pType = #{ptId}
+        </if>
+        <if test="pName != null and pName != ''">
+            and pName = #{pName}
+        </if>
+        limit #{startIndex},#{pageSize}
+    </select>
+    <select id="getProductByPId" resultMap="ProductMap">
+        select * from product as p
+        inner join product_type as pt on p.pType = pt.ptId
+        where pId = #{pId}
+    </select>
+    <resultMap id="ProductMap" type="Product" autoMapping="true">
+        <association property="productType" javaType="ProductType">
+            <id property="ptId" column="ptId" />
+            <result property="ptImage" column="ptImage"/>
+            <result property="ptName" column="ptName"/>
+        </association>
+    </resultMap>
+</mapper>

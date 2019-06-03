@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zxt.shengxian.dao.UserDao">
+    <select id="getUserNameAndUserPwd"  resultType="User">
+        select * from `user` where userName = #{userName} and userPwd = #{userPwd};
+    </select>
+    <select id="checkEmailIsExist" resultType="int">
+        select count(1) from `user` where userEmail = #{userEmail}
+    </select>
+    <insert id="register">
+        insert into `user`(userName,userPwd,userEmail)
+        value(#{userName},#{userPwd},#{userEmail})
+    </insert>
+
+</mapper>

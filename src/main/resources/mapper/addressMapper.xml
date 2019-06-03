@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zxt.shengxian.dao.AddressDao">
+    <select id="getAddressByUId" resultType="Address">
+        select * from address where uId = #{uId}
+    </select>
+    <insert id="addAddress">
+        insert into address(uId,aName,zipCode,phone,aAddress,status)
+        value(#{uId},#{aName},#{zipCode},#{phone},#{aAddress},#{status})
+    </insert>
+    <update id="updAddress">
+        update address set aName = #{aName},zipCode = #{zipCode},aAddress = #{aAddress},status = #{status}
+        where uId = #{uId}
+    </update>
+</mapper>

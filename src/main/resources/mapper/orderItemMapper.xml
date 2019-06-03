@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zxt.shengxian.dao.OrderItemDao">
+    <insert id="addOrderItemOne">
+        insert into orderitem(oiId,oipId,oipCount)
+        values(#{oiId},#{pId},#{pCount})
+    </insert>
+    <insert id="addOrderItem">
+        insert into orderitem(oiId,oipId,oipCount)
+        values
+        <foreach collection="map" item="value" index="key" separator=",">
+            (#{oiId},${key},#{value})
+        </foreach>
+    </insert>
+    <insert id="addOrder">
+        insert into `order`(oiId,uId,total,state)
+        value (#{oiId},#{uId},#{total},#{state})
+    </insert>
+    <select id="getOrderProduct" resultType="Order">
+        select * from `order`
+        where uId = #{uId}
+        ORDER BY dateTime DESC
+    </select>
+    <select id="getOrderItemByOiId" resultType="OrderItem">
+        select * from orderitem
+        where oiId = #{oiId}
+    </select>
+    <select id="getOrderItemProductByPid" resultType="Product">
+        select * from product where pId = #{pId}
+    </select>
+    <select id="getOrderByOiId" resultMap="getOrderByOiIdMap">
+        select p.*,oi.*,o.* from orderitem as oi
+        inner join `order` as o on o.oiId = oi.oiId
+        inner join product as p on p.pId = oi.oipId
+        where oi.oiId = #{oiId}
+    </select>
+
+    <resultMap id="getOrderByOiIdMap" type="Order" autoMapping="true" >
+        <collection property="orderItemList" ofType="OrderItem" >
+            <id property="oiId" column="oiId" />
+            <result property="oipId" column="oipId"/>
+            <result property="oipCount" column="oipCount"/>
+            <result property="oipUnitPrice" column="pUnitPrice"/>
+            <association property="product" javaType="Product" autoMapping="true">
+                <!--<id property="pId" column="pId"/>
+                <result property="pId" column="pId"/>
+                <result property="pName" column="pName"/>
+                <result property="pType" column="pType"/>
+                <result property="pUnitPrice" column="pUnitPrice"/>
+                <result property="pDesc" column="pDesc"/>
+                <result property="pImage" column="pImage"/>
+                <result property="pUnit" column="pUnit"/>
+                <result property="pBigImage" column="pBigImage"/>-->
+            </association>
+        </collection>
+    </resultMap>
+    <update id="updOrderByOiId">
+        update `order` set state = 2 where oiId = #{oiId}
+    </update>
+</mapper>
